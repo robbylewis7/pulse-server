@@ -49,11 +49,6 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 //////////////////
 
 
-app.use(express.static(path.resolve(__dirname, 'Client')));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'Client', 'index.html'))
-});
 
 
 app.get('/teams', (req, res) => {
