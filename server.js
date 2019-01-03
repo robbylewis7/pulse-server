@@ -5,35 +5,23 @@ const app = express();
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const cors = require('cors');
-const {PORT, DATABASE_URL} = require('./config');
+const {PORT, DATABASE_URL, CLIENT_ORIGIN} = require('./config');
 const {Teams} = require('./models');
 const passport = require('passport');
 const favicon = require('express-favicon');
 const path = require('path');
 
 
+const { router: usersRouter } = require('./users');
+const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
+
 app.use(express.static('public'));
 
 app.use(express.json());
 
 app.use(cors({
-    origin: 'http://localhost:3000'
-}));
-
-
-const { router: usersRouter } = require('./users');
-const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
-
-
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
-  if (req.method === 'OPTIONS') {
-    return res.send(204);
-  }
-  next();
-});
+    origin: CLIENT_ORIGIN
+})); 
 
 passport.use(localStrategy);
 passport.use(jwtStrategy);
